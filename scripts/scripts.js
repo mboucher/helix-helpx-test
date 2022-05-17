@@ -16,7 +16,7 @@
  * @param {Object} data additional data for RUM sample
  */
 
-export function sampleRUM(checkpoint, data = {}) {
+ export function sampleRUM(checkpoint, data = {}) {
   try {
     window.hlx = window.hlx || {};
     if (!window.hlx.rum) {
@@ -514,37 +514,6 @@ function decorateTemplateAndTheme() {
 }
 
 /**
- * decorates paragraphs containing a single link as buttons.
- * @param {Element} element container element
- */
-
-export function decorateButtons(element) {
-  element.querySelectorAll('a').forEach((a) => {
-    a.title = a.title || a.textContent;
-    if (a.href !== a.textContent) {
-      const up = a.parentElement;
-      const twoup = a.parentElement.parentElement;
-      if (!a.querySelector('img')) {
-        if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
-          a.className = 'button primary'; // default
-          up.classList.add('button-container');
-        }
-        if (up.childNodes.length === 1 && up.tagName === 'STRONG'
-            && twoup.childNodes.length === 1 && twoup.tagName === 'P') {
-          a.className = 'button primary';
-          twoup.classList.add('button-container');
-        }
-        if (up.childNodes.length === 1 && up.tagName === 'EM'
-            && twoup.childNodes.length === 1 && twoup.tagName === 'P') {
-          a.className = 'button secondary';
-          twoup.classList.add('button-container');
-        }
-      }
-    }
-  });
-}
-
-/**
  * Adds the favicon.
  * @param {string} href The favicon URL
  */
@@ -678,8 +647,6 @@ export function decorateMain(main) {
   // forward compatible link rewriting
   makeLinksRelative(main);
 
-  // hopefully forward compatible button decoration
-  decorateButtons(main);
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
@@ -691,11 +658,43 @@ export function decorateMain(main) {
  */
 async function loadEager(doc) {
   decorateTemplateAndTheme();
+  const html = doc.querySelector('html');
+  html.classList.add('spectrum');
+  html.classList.add('spectrum--medium');
+  html.classList.add('spectrum--light');
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
     await waitForLCP();
   }
+}
+
+/**
+ * Apply Spectrum Typography
+ */
+
+function defaultSpectrumTypography(doc) {
+  const headings = doc.querySelectorAll('h1,h2,h3,h4');
+  headings.forEach(heading => {
+    heading.classList.add('spectrum-Heading');
+  })
+  
+  const heading1 = doc.querySelectorAll('h1');
+  heading1.forEach(h1 => {
+    h1.classList.add('spectrum-Heading--sizeXXL');
+  });
+
+  const heading2 = doc.querySelectorAll('h2');
+  heading2.forEach(h2 => {
+    h2.classList.add('spectrum-Heading--sizeXL');
+  });
+
+  const heading3 = doc.querySelectorAll('h3');
+  heading3.forEach(h3 => {
+    h3.classList.add('spectrum-Heading--sizeL');
+  });
+
+  doc.querySelector('body').classList.add('spectrum-Body', 'spectrum-Body--sizeM')
 }
 
 /**
@@ -705,15 +704,13 @@ async function loadLazy(doc) {
   const main = doc.querySelector('main');
   await loadBlocks(main);
 
-  const { hash } = window.location;
-  const element = hash ? main.querySelector(hash) : false;
-  if (hash && element) element.scrollIntoView();
-
   loadHeader(doc.querySelector('header'));
   loadFooter(doc.querySelector('footer'));
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   addFavIcon(`${window.hlx.codeBasePath}/styles/favicon.svg`);
+  defaultSpectrumTypography(doc);
+
 }
 
 /**
