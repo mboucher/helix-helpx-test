@@ -698,6 +698,25 @@ function defaultSpectrumTypography(doc) {
 }
 
 /**
+ *  Convert links with href ending with uicontrol to span elements
+ * 
+ */
+function handleUIcontrols(doc) {
+  const links = doc.querySelectorAll('a');
+  links.forEach(link => {
+    if(link.href.endsWith('uicontrol')) {
+      console.log("found one");
+      const parent = link.parentElement;
+      const spanElement = document.createElement('span');
+      spanElement.classList.add('uicontrol');
+      spanElement.innerText = link.innerText;
+      parent.replaceChild(spanElement, link);
+
+    }
+  })
+}
+
+/**
  * loads everything that doesn't need to be delayed.
  */
 async function loadLazy(doc) {
@@ -710,7 +729,7 @@ async function loadLazy(doc) {
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   addFavIcon(`${window.hlx.codeBasePath}/styles/favicon.svg`);
   defaultSpectrumTypography(doc);
-
+  handleUIcontrols(doc);
 }
 
 /**

@@ -40,17 +40,11 @@
     margin: auto;
   }
 
-  ol > li ::marker {
-    border-radius: 50%;
-    left: -20px;
-    top:0;
-    font-size: 13px;
-    height: 27px;
-    width: 27px;
-    padding: 3px;
-    text-align: center;
-    font-weight: 400;
-    color: #ffff;
-    background-attachment: #333;
+  .uicontrol {
+    font-weight: bold;
+  }
+
+  main img {
+    padding-left: 30px;
   }
 

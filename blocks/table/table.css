@@ -1,0 +1,21 @@
+.table {
+    display: table;
+
+}
+
+.table>div {
+    display: table-row;
+    
+}
+
+.table>div:nth-child(1) {
+    background-color: beige;
+}
+
+.table>div>div{
+    display: table-cell;
+    padding: 5px;
+    border-width: thin;
+    border-color: black;
+    border-style: solid;
+}
